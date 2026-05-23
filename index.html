@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>달서A 실시간 실적</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    padding: 20px;
+}
+h1 { margin-bottom: 5px; }
+.updated { color: #666; margin-bottom: 20px; }
+
+.section-title {
+    margin-top: 28px;
+    margin-bottom: 12px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.card {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.card .title {
+    color: #666;
+    font-size: 14px;
+}
+.card .value {
+    font-size: 34px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+.big-card {
+    background: #111827;
+    color: white;
+}
+.team-dalseo {
+    background: #2563eb;
+    color: white;
+}
+.team-sonic {
+    background: #16a34a;
+    color: white;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+th, td {
+    padding: 11px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+th {
+    background: #222;
+    color: white;
+}
+.rank {
+    font-weight: bold;
+}
+.badge {
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+}
+.badge-dalseo {
+    background: #2563eb;
+}
+.badge-sonic {
+    background: #16a34a;
+}
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+<body>
+
+<h1>달서A 실시간 실적</h1>
+<div class="updated" id="updated"></div>
+
+<h2 class="section-title">전체 실적</h2>
+<div class="cards">
+    <div class="card big-card"><div class="title">전체 완료</div><div class="value" id="totalComplete">0</div></div>
+    <div class="card"><div class="title">전체 거절</div><div class="value" id="totalReject">0</div></div>
+    <div class="card"><div class="title">전체 배차취소</div><div class="value" id="totalCancel">0</div></div>
+    <div class="card"><div class="title">전체 기사수</div><div class="value" id="totalCount">0</div></div>
+</div>
+
+<h2 class="section-title">연합팀별 실적</h2>
+<div class="cards">
+    <div class="card team-dalseo"><div class="title">달서T 완료</div><div class="value" id="dalseoComplete">0</div></div>
+    <div class="card team-dalseo"><div class="title">달서T 기사수</div><div class="value" id="dalseoCount">0</div></div>
+    <div class="card team-sonic"><div class="title">소닉T 완료</div><div class="value" id="sonicComplete">0</div></div>
+    <div class="card team-sonic"><div class="title">소닉T 기사수</div><div class="value" id="sonicCount">0</div></div>
+</div>
+
+<h2 class="section-title">피크별 실적</h2>
+<div class="cards">
+    <div class="card"><div class="title">아침</div><div class="value" id="morning">0</div></div>
+    <div class="card"><div class="title">점심</div><div class="value" id="afternoon">0</div></div>
+    <div class="card"><div class="title">저녁</div><div class="value" id="evening">0</div></div>
+    <div class="card"><div class="title">심야</div><div class="value" id="midnight">0</div></div>
+</div>
+
+<h2 class="section-title">기사별 실적</h2>
+<table>
+<thead>
+<tr>
+    <th>순위</th>
+    <th>팀</th>
+    <th>기사명</th>
+    <th>상태</th>
+    <th>완료</th>
+    <th>거절</th>
+    <th>배차취소</th>
+    <th>아침</th>
+    <th>점심</th>
+    <th>저녁</th>
+    <th>심야</th>
+</tr>
+</thead>
+<tbody id="riderTable"></tbody>
+</table>
+
+<script>
+async function loadData() {
+    const res = await fetch("data.json?time=" + new Date().getTime());
+    const data = await res.json();
+
+    document.getElementById("updated").innerText = "마지막 업데이트: " + data.updatedAt;
+
+    document.getElementById("totalComplete").innerText = data.total.complete;
+    document.getElementById("totalReject").innerText = data.total.reject;
+    document.getElementById("totalCancel").innerText = data.total.cancel;
+    document.getElementById("totalCount").innerText = data.total.count;
+
+    document.getElementById("dalseoComplete").innerText = data.dalseoT.complete;
+    document.getElementById("dalseoCount").innerText = data.dalseoT.count;
+    document.getElementById("sonicComplete").innerText = data.sonicT.complete;
+    document.getElementById("sonicCount").innerText = data.sonicT.count;
+
+    document.getElementById("morning").innerText = data.total.morning;
+    document.getElementById("afternoon").innerText = data.total.afternoon;
+    document.getElementById("evening").innerText = data.total.evening;
+    document.getElementById("midnight").innerText = data.total.midnight;
+
+    const tbody = document.getElementById("riderTable");
+    tbody.innerHTML = "";
+
+    data.riders.forEach((r, i) => {
+        const badgeClass = r.team === "달서T" ? "badge-dalseo" : "badge-sonic";
+
+        tbody.innerHTML += `
+            <tr>
+                <td class="rank">${i + 1}</td>
+                <td><span class="badge ${badgeClass}">${r.team}</span></td>
+                <td>${r.name}</td>
+                <td>${r.status}</td>
+                <td>${r.complete}</td>
+                <td>${r.reject}</td>
+                <td>${r.cancel}</td>
+                <td>${r.morning}</td>
+                <td>${r.afternoon}</td>
+                <td>${r.evening}</td>
+                <td>${r.midnight}</td>
+            </tr>
+        `;
+    });
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+
+</body>
+</html>

@@ -1,23 +1,52 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-
 import {
-  getAuth,
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    auth,
+    signInWithEmailAndPassword
+} from "./firebase.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA2IRDO33QufPwcr6qBfq35wPb7qSYLB3s",
-  authDomain: "supersonic77rider.firebaseapp.com",
-  projectId: "supersonic77rider",
-  storageBucket: "supersonic77rider.firebasestorage.app",
-  messagingSenderId: "443902968540",
-  appId: "1:443902968540:web:b8ec11866d8f258fa46a19"
-};
+document.addEventListener("DOMContentLoaded", () => {
+    const status = document.getElementById("workStatus");
+    const startBtn = document.getElementById("startButton");
+    const endBtn = document.getElementById("endButton");
 
-const app = initializeApp(firebaseConfig);
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
 
-const auth = getAuth(app);
+    const savedStatus = localStorage.getItem("workStatus");
 
-export { auth, signInWithEmailAndPassword };
+    if (savedStatus === "working") {
+        status.textContent = "출근 상태입니다.";
+    } else {
+        status.textContent = "퇴근 상태입니다.";
+    }
 
-console.log("✅ Firebase 연결 성공");
+    startBtn.addEventListener("click", () => {
+        status.textContent = "출근 상태입니다.";
+        localStorage.setItem("workStatus", "working");
+    });
+
+    endBtn.addEventListener("click", () => {
+        status.textContent = "퇴근 상태입니다.";
+        localStorage.setItem("workStatus", "off");
+    });
+
+    loginBtn.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (email === "" || password === "") {
+            alert("이메일과 비밀번호를 모두 입력해주세요.");
+            return;
+        }
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+
+            alert("로그인에 성공했습니다.");
+        } catch (error) {
+            console.error(error);
+
+            alert("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
+        }
+    });
+});

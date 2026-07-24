@@ -5,39 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUPERSONIC RIDER</title>
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=462d3b4020859b9e23478ca7cff55e49&autoload=false"></script>
+
+    <style>
+        .map-card {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        #map {
+            width: 100%;
+            height: 360px;
+            margin-top: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #e9ecef;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .map-controls button {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        #locationStatus,
+        #distanceText {
+            margin: 10px 0 0;
+            word-break: keep-all;
+        }
+    </style>
 </head>
 
 <body>
 
 <div id="login-box">
-
     <h2>SUPERSONIC 라이더 로그인</h2>
 
-    <input
-        type="email"
-        id="email"
-        placeholder="이메일을 입력하세요">
+    <input type="email" id="email" placeholder="이메일을 입력하세요">
+    <input type="password" id="password" placeholder="비밀번호를 입력하세요">
 
-    <input
-        type="password"
-        id="password"
-        placeholder="비밀번호를 입력하세요">
-
-    <button id="loginBtn">
-        로그인
-    </button>
-
+    <button id="loginBtn">로그인</button>
 </div>
 
 <div id="app" style="display:none;">
-
     <header>
         <h1>SUPERSONIC RIDER</h1>
         <p>라이더 업무 관리</p>
     </header>
 
     <main>
-
         <section class="status-card">
             <h2>오늘의 근무 상태</h2>
             <p id="workStatus">퇴근 상태입니다.</p>
@@ -48,13 +74,25 @@
             <button id="endButton">퇴근하기</button>
         </section>
 
+        <section class="map-card">
+            <h2>현재 위치 및 이동 경로</h2>
+
+            <div id="map"></div>
+
+            <p id="locationStatus">로그인 후 위치 정보를 불러옵니다.</p>
+            <p id="distanceText">오늘 이동거리: 0.00 km</p>
+
+            <div class="map-controls">
+                <button id="currentLocationButton" type="button">현재 위치로 이동</button>
+                <button id="clearRouteButton" type="button">이동 경로 초기화</button>
+            </div>
+        </section>
+
         <section class="menu-card">
             <h2>내 정보</h2>
             <p>라이더 정보와 업무 내역을 확인할 수 있습니다.</p>
         </section>
-
     </main>
-
 </div>
 
 <script type="module" src="script.js"></script>

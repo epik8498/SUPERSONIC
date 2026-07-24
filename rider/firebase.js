@@ -1,5 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
+import {
+  getAuth,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyA2IRDO33QufPwcr6qBfq35wPb7qSYLB3s",
   authDomain: "supersonic77rider.firebaseapp.com",
@@ -11,10 +16,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-import {
-  getAuth
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+const auth = getAuth(app);
 
-export const auth = getAuth(app);
+export { auth, signInWithEmailAndPassword };
 
 console.log("✅ Firebase 연결 성공");

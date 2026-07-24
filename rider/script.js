@@ -1,6 +1,7 @@
 import {
     auth,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    saveAttendance
 } from "./firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,16 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
         status.textContent = "퇴근 상태입니다.";
     }
 
-    startBtn.addEventListener("click", () => {
-        status.textContent = "출근 상태입니다.";
-        localStorage.setItem("workStatus", "working");
-    });
-
-    endBtn.addEventListener("click", () => {
-        status.textContent = "퇴근 상태입니다.";
-        localStorage.setItem("workStatus", "off");
-    });
-
     loginBtn.addEventListener("click", async () => {
 
         const email = emailInput.value.trim();
@@ -47,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-
             await signInWithEmailAndPassword(auth, email, password);
 
             loginBox.style.display = "none";
@@ -56,13 +46,35 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("로그인 성공");
 
         } catch (error) {
-
-            alert("로그인 실패");
-
             console.error(error);
+            alert("로그인 실패");
+        }
+    });
 
+    startBtn.addEventListener("click", async () => {
+
+        if (!auth.currentUser) {
+            alert("먼저 로그인해주세요.");
+            return;
         }
 
+        try {
+            await saveAttendance(auth.currentUser.email);
+
+            status.textContent = "출근 상태입니다.";
+            localStorage.setItem("workStatus", "working");
+
+            alert("출근 기록이 저장되었습니다.");
+
+        } catch (error) {
+            console.error(error);
+            alert("출근 기록 저장에 실패했습니다.");
+        }
+    });
+
+    endBtn.addEventListener("click", () => {
+        status.textContent = "퇴근 상태입니다.";
+        localStorage.setItem("workStatus", "off");
     });
 
 });

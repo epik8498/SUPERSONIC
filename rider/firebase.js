@@ -5,6 +5,10 @@ import {
   signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyA2IRDO33QufPwcr6qBfq35wPb7qSYLB3s",
   authDomain: "supersonic77rider.firebaseapp.com",
@@ -17,7 +21,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { auth, signInWithEmailAndPassword };
+export {
+  auth,
+  db,
+  signInWithEmailAndPassword
+};
 
-console.log("✅ Firebase 연결 성공");
+console.log("✅ Firebase + Firestore 연결 성공");

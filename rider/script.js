@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("로그인 성공");
 
         } catch (error) {
-            console.error(error);
+            console.error("로그인 오류:", error);
             alert("로그인 실패");
         }
     });
@@ -58,8 +58,18 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        const savedStatus = localStorage.getItem("workStatus");
+
+        if (savedStatus === "working") {
+            alert("이미 출근 상태입니다.");
+            return;
+        }
+
         try {
-            await saveAttendance(auth.currentUser.email);
+            await saveAttendance(
+                auth.currentUser.email,
+                "출근"
+            );
 
             status.textContent = "출근 상태입니다.";
             localStorage.setItem("workStatus", "working");
@@ -67,14 +77,40 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("출근 기록이 저장되었습니다.");
 
         } catch (error) {
-            console.error(error);
+            console.error("출근 저장 오류:", error);
             alert("출근 기록 저장에 실패했습니다.");
         }
     });
 
-    endBtn.addEventListener("click", () => {
-        status.textContent = "퇴근 상태입니다.";
-        localStorage.setItem("workStatus", "off");
+    endBtn.addEventListener("click", async () => {
+
+        if (!auth.currentUser) {
+            alert("먼저 로그인해주세요.");
+            return;
+        }
+
+        const savedStatus = localStorage.getItem("workStatus");
+
+        if (savedStatus !== "working") {
+            alert("현재 퇴근 상태입니다.");
+            return;
+        }
+
+        try {
+            await saveAttendance(
+                auth.currentUser.email,
+                "퇴근"
+            );
+
+            status.textContent = "퇴근 상태입니다.";
+            localStorage.setItem("workStatus", "off");
+
+            alert("퇴근 기록이 저장되었습니다.");
+
+        } catch (error) {
+            console.error("퇴근 저장 오류:", error);
+            alert("퇴근 기록 저장에 실패했습니다.");
+        }
     });
 
 });

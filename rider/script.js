@@ -1,23 +1,23 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const status = document.getElementById("workStatus");
-    const startBtn = document.getElementById("startButton");
-    const endBtn = document.getElementById("endButton");
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-    const savedStatus = localStorage.getItem("workStatus");
+import {
+  getAuth,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-    if (savedStatus === "working") {
-        status.textContent = "출근 상태입니다.";
-    } else {
-        status.textContent = "퇴근 상태입니다.";
-    }
+const firebaseConfig = {
+  apiKey: "AIzaSyA2IRDO33QufPwcr6qBfq35wPb7qSYLB3s",
+  authDomain: "supersonic77rider.firebaseapp.com",
+  projectId: "supersonic77rider",
+  storageBucket: "supersonic77rider.firebasestorage.app",
+  messagingSenderId: "443902968540",
+  appId: "1:443902968540:web:b8ec11866d8f258fa46a19"
+};
 
-    startBtn.addEventListener("click", () => {
-        status.textContent = "출근 상태입니다.";
-        localStorage.setItem("workStatus", "working");
-    });
+const app = initializeApp(firebaseConfig);
 
-    endBtn.addEventListener("click", () => {
-        status.textContent = "퇴근 상태입니다.";
-        localStorage.setItem("workStatus", "off");
-    });
-});
+const auth = getAuth(app);
+
+export { auth, signInWithEmailAndPassword };
+
+console.log("✅ Firebase 연결 성공");

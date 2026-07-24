@@ -11,4 +11,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+import {
+  getAuth
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+export const auth = getAuth(app);
+
 console.log("✅ Firebase 연결 성공");

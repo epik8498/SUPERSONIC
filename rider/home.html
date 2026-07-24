@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SUPERSONIC RIDER</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+<div id="login-box">
+
+    <h2>SUPERSONIC 라이더 로그인</h2>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="이메일을 입력하세요">
+
+    <input
+        type="password"
+        id="password"
+        placeholder="비밀번호를 입력하세요">
+
+    <button id="loginBtn">
+        로그인
+    </button>
+
+</div>
+
+<div id="app" style="display:none;">
 
     <header>
         <h1>SUPERSONIC RIDER</h1>
@@ -17,24 +37,6 @@
     </header>
 
     <main>
-
-        <div id="login-box">
-            <h2>SUPERSONIC 라이더 로그인</h2>
-
-            <input
-                type="email"
-                id="email"
-                placeholder="이메일을 입력하세요"
-            >
-
-            <input
-                type="password"
-                id="password"
-                placeholder="비밀번호를 입력하세요"
-            >
-
-            <button id="loginBtn">로그인</button>
-        </div>
 
         <section class="status-card">
             <h2>오늘의 근무 상태</h2>
@@ -53,7 +55,9 @@
 
     </main>
 
-    <script type="module" src="script.js"></script>
+</div>
+
+<script type="module" src="script.js"></script>
 
 </body>
 </html>
